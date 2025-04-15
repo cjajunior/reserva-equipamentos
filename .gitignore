@@ -1,0 +1,34 @@
+## Ignore pasta de build
+bin/
+obj/
+
+## Ignore configurações de IDE
+.vscode/
+.vs/
+.idea/
+
+## Ignore arquivos de log e cache
+*.log
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Ignora pacotes e dependências temporárias
+packages/
+*.nupkg
+
+## Ignore arquivos de sistema
+.DS_Store
+Thumbs.db
+
+## Ignore secrets
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+## Ignore publish temporário
+publish/
+wwwroot/dist/
+
+.fake

@@ -1,0 +1,48 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Reserva de Equipamentos</a>
+    </div>
+</div>
+
+<div class="sidebar">
+    <nav class="flex-column">
+        <NavLink class="nav-link" href="equipamentos" Match="NavLinkMatch.All">
+            <span class="oi oi-list-rich" aria-hidden="true"></span> Equipamentos
+        </NavLink>
+        <NavLink class="nav-link" href="reservas">
+            <span class="oi oi-calendar" aria-hidden="true"></span> Reservas
+        </NavLink>
+    </nav>
+</div>
+
+<style>
+    
+    .nav-link {
+        color: #fcfeff;
+        font-weight: 500;
+        padding: 0.5rem;
+        display: block;
+        border-radius: 2px;
+    }
+
+    .nav-link.active {
+        background-color: #e9ecef;
+        color: #000;
+    }
+
+    .nav-link:hover {
+        background-color: #dee2e6;
+        color: #000;
+    }
+
+    .top-row {
+        background-color: #0078d7;
+        color: white;
+        padding: 0.3rem;
+    }
+
+    .navbar-brand {
+        color: white;
+        font-weight: bold;
+    }
+</style>

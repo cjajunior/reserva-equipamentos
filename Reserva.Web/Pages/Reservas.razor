@@ -1,0 +1,120 @@
+@page "/reservas"
+@inject ReservaService ReservaService
+@inject EquipamentoService EquipamentoService
+@using Reserva.Domain.Entities
+@using Reserva.Infrastructure
+@inject HttpClient Http
+
+
+
+<h3>📆 Reservas</h3>
+
+@if (!string.IsNullOrWhiteSpace(mensagem))
+{
+    <div class="alert alert-success">@mensagem</div>
+}
+
+<EditForm Model="@novaReserva" OnValidSubmit="Reservar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Nome do Usuário:</label>
+        <InputText class="form-control" @bind-Value="novaReserva.NomeUsuario" />
+    </div>
+
+    <div class="mb-3">
+        <label>Data da Reserva:</label>
+        <InputDate class="form-control" @bind-Value="novaReserva.DataReserva" />
+    </div>
+
+    <div class="mb-3">
+        <label>Equipamento:</label>
+        <InputSelect class="form-control" @bind-Value="novaReserva.EquipamentoId">
+            <option value="">Selecione...</option>
+            @foreach (var equipamento in equipamentosDisponiveis)
+            {
+                <option value="@equipamento.Id">@equipamento.Nome (@equipamento.Tipo)</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button type="submit" class="btn btn-success">Reservar</button>
+</EditForm>
+
+<hr />
+
+<h4>Reservas Realizadas</h4>
+
+@if (reservas.Count == 0)
+{
+    <p>Nenhuma reserva registrada.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Data</th>
+                <th>Equipamento</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reserva in reservas)
+            {
+                <tr>
+                    <td>@reserva.NomeUsuario</td>
+                    <td>@reserva.DataReserva.ToShortDateString()</td>
+                    <td>@reserva.Equipamento?.Nome (@reserva.Equipamento?.Tipo)</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Remover(reserva.Id)">Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ReservaEntity> reservas = new();
+    private List<Equipamento> equipamentosDisponiveis = new();
+    private ReservaEntity novaReserva = new();
+    private string mensagem = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+        reservas = await ReservaService.ListarAsync();
+        equipamentosDisponiveis = await EquipamentoService.ListarDisponiveisAsync();
+    }
+
+ private async Task Reservar()
+{
+    Console.WriteLine("Tentando reservar...");
+    try
+    {
+        novaReserva.UsuarioId = 1; // Confirma que esse ID existe
+        await Http.PostAsJsonAsync("http://localhost:5050/api/reserva", novaReserva);
+        novaReserva = new ReservaEntity();
+        mensagem = "Reserva realizada com sucesso.";
+        await CarregarDados();
+    }
+    catch
+    {
+        mensagem = "Erro ao realizar reserva.";
+    }
+}
+
+    private async Task Remover(int id)
+    {
+        await ReservaService.RemoverAsync(id);
+        mensagem = "Reserva removida com sucesso.";
+        await CarregarDados();
+    }
+}

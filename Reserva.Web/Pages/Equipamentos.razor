@@ -1,0 +1,162 @@
+@page "/equipamentos"
+@inject EquipamentoService EquipamentoService
+@using Reserva.Domain.Entities
+@using Reserva.Infrastructure
+@inject EquipamentoService EquipamentoService
+
+
+
+<h3 class="text-2xl font-semibold mb-4">Equipamentos Audiovisuais</h3>
+
+@if (!string.IsNullOrWhiteSpace(mensagem))
+{
+    <div class="mb-4 p-3 rounded bg-green-200 text-green-800 shadow">
+        @mensagem
+    </div>
+}
+
+<div class="mb-4">
+    <button class="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700" @onclick="MostrarFormulario">
+        + Adicionar Equipamento
+    </button>
+</div>
+
+@if (exibindoFormulario)
+{
+    <div class="mb-6 p-4 border rounded shadow bg-gray-50">
+        <h4 class="text-xl font-medium mb-2">@((editandoId == 0) ? "Adicionar Equipamento" : "Editar Equipamento")</h4>
+        <div class="mb-2">
+            <input class="border p-2 w-full" placeholder="Nome" @bind="novoEquipamento.Nome" />
+        </div>
+        <div class="mb-2">
+            <input class="border p-2 w-full" placeholder="Tipo" @bind="novoEquipamento.Tipo" />
+        </div>
+        <div class="mb-2">
+            <label class="inline-flex items-center">
+                <input type="checkbox" class="mr-2" @bind="novoEquipamento.Disponivel" /> Disponível
+            </label>
+        </div>
+        <button class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700" @onclick="SalvarEquipamento">
+            💾 Salvar
+        </button>
+        <button class="ml-2 text-gray-600 underline" @onclick="CancelarFormulario">Cancelar</button>
+    </div>
+}
+
+@if (equipamentos is null)
+{
+    <p>Carregando equipamentos...</p>
+}
+else if (!equipamentos.Any())
+{
+    <p class="text-gray-600">Nenhum equipamento cadastrado.</p>
+}
+else
+{
+    <table class="table-auto w-full border">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">Nome</th>
+                <th class="px-4 py-2">Tipo</th>
+                <th class="px-4 py-2">Disponível</th>
+                <th class="px-4 py-2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var equipamento in equipamentos)
+            {
+                <tr>
+                    <td class="border px-4 py-2">@equipamento.Id</td>
+                    <td class="border px-4 py-2">@equipamento.Nome</td>
+                    <td class="border px-4 py-2">@equipamento.Tipo</td>
+                    <td class="border px-4 py-2">@(equipamento.Disponivel ? "Sim" : "Não")</td>
+                    <td class="border px-4 py-2 space-x-2">
+                        <button class="text-blue-600 hover:underline" @onclick="() => EditarEquipamento(equipamento)">Editar</button>
+                        <button class="text-red-600 hover:underline" @onclick="() => RemoverEquipamento(equipamento.Id)">Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Equipamento>? equipamentos;
+    private Equipamento novoEquipamento = new();
+    private bool exibindoFormulario = false;
+    private string? mensagem;
+    private int editandoId = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarEquipamentos();
+    }
+
+    private async Task CarregarEquipamentos()
+    {
+        equipamentos = await EquipamentoService.ListarAsync();
+        StateHasChanged();
+    }
+
+    private void MostrarFormulario()
+    {
+        novoEquipamento = new Equipamento();
+        editandoId = 0;
+        exibindoFormulario = true;
+        mensagem = null;
+    }
+
+    private void EditarEquipamento(Equipamento equipamento)
+    {
+        novoEquipamento = new Equipamento
+        {
+            Id = equipamento.Id,
+            Nome = equipamento.Nome,
+            Tipo = equipamento.Tipo,
+            Disponivel = equipamento.Disponivel
+        };
+        editandoId = equipamento.Id;
+        exibindoFormulario = true;
+        mensagem = null;
+    }
+
+    private async Task SalvarEquipamento()
+    {
+        if (editandoId == 0)
+        {
+            await EquipamentoService.AdicionarAsync(novoEquipamento);
+            mensagem = "Equipamento adicionado com sucesso.";
+        }
+        else
+        {
+            await EquipamentoService.AtualizarAsync(novoEquipamento);
+            mensagem = "Equipamento atualizado com sucesso.";
+        }
+
+        exibindoFormulario = false;
+        await CarregarEquipamentos();
+    }
+
+    private void CancelarFormulario()
+    {
+        exibindoFormulario = false;
+        mensagem = null;
+    }
+
+   private async Task RemoverEquipamento(int id)
+{
+    try
+    {
+        await EquipamentoService.RemoverAsync(id);
+        mensagem = "Equipamento removido com sucesso.";
+    }
+    catch (Exception ex)
+    {
+        mensagem = ex.Message;
+    }
+
+    await CarregarEquipamentos();
+}
+
+}
