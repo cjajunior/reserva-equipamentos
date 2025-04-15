@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,8 @@ app.MapFallbackToPage("/_Host");
 app.Run();
 
 =======
+=======
+>>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Reserva.Web;
@@ -52,4 +55,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 await builder.Build().RunAsync();
+<<<<<<< HEAD
+>>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
+=======
 >>>>>>> d989c1677c3581981e9a0d970857f031537c8d45

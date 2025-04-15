@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <Project Sdk="Microsoft.NET.Sdk.Web">
+=======
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+>>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
 =======
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 >>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
@@ -11,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
 <<<<<<< HEAD
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,9 +32,14 @@
 </Project>
 
 =======
+=======
+>>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.4" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
+<<<<<<< HEAD
+>>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
+=======
 >>>>>>> d989c1677c3581981e9a0d970857f031537c8d45
